@@ -1,5 +1,7 @@
 # godev
 
+Go Development Container for Docker and VS Code
+
 Example Dockerfile - for use as builder
 
 ```
