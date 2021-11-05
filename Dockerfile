@@ -5,7 +5,7 @@ FROM debian:${VERSION}
 RUN export DEBIAN_FRONTEND=noninteractive && \
         apt update && \
         apt install -y -q --no-install-recommends \
-        build-essential git golang-go
+        build-essential git ca-certificates golang-go
 
 RUN rm -rf /var/lib/apt/lists/*
 
