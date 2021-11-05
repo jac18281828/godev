@@ -3,8 +3,11 @@ ARG VERSION=stable-slim
 FROM debian:${VERSION} 
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
-    apt update && \
-        apt -y install build-essential git golang-go
+        apt update && \
+        apt install -y -q --no-install-recommends \
+        build-essential git golang-go
+
+RUN rm -rf /var/lib/apt/lists/*
 
 ENV GOPATH=/go
 ENV GOBIN=/go/bin
