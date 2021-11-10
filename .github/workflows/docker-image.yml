@@ -19,5 +19,5 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}        
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile --tag jac18281828/godev:$(date +%m%d%y)
-        docker push jac18281828/godev:$(date +%m%d%y)
+        docker build . --file Dockerfile --tag jac18281828/${{github.event.repository.name}}:$(date +%m%d%y)
+        docker push jac18281828/${{github.event.repository.name}}:$(date +%m%d%y)
