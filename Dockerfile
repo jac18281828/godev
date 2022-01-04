@@ -7,6 +7,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
         apt install -y -q --no-install-recommends \
         build-essential git ca-certificates golang-go
 
+RUN apt clean
 RUN rm -rf /var/lib/apt/lists/*
 
 ENV GOPATH=/go

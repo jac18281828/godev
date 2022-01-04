@@ -2,5 +2,7 @@
 
 VERSION=$(date +%m%d%y)
 
-docker build . -t godev:${VERSION} && \
-	docker run --rm -i -t godev:${VERSION}
+PROJECT=jac18281828/godev
+
+docker build . -t ${PROJECT}:${VERSION} && \
+	docker run --rm -i -t ${PROJECT}:${VERSION}
