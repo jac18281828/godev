@@ -1,5 +1,4 @@
 ARG VERSION=stable-slim
-
 FROM debian:${VERSION} 
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
