@@ -4,10 +4,14 @@ FROM debian:${VERSION}
 RUN export DEBIAN_FRONTEND=noninteractive && \
         apt update && \
         apt install -y -q --no-install-recommends \
+        sudo ca-certificates curl \
         build-essential git ca-certificates golang-go
-
 RUN apt clean
 RUN rm -rf /var/lib/apt/lists/*
+
+RUN adduser jac
+RUN adduser jac sudo
+RUN echo '%jac ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ENV GOPATH=/go
 ENV GOBIN=/go/bin
