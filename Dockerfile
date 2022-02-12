@@ -4,8 +4,8 @@ FROM debian:${VERSION}
 RUN export DEBIAN_FRONTEND=noninteractive && \
         apt update && \
         apt install -y -q --no-install-recommends \
-        sudo ca-certificates curl \
-        build-essential git ca-certificates golang-go
+        sudo ca-certificates curl git \
+        build-essential ca-certificates golang-go
 RUN apt clean
 RUN rm -rf /var/lib/apt/lists/*
 
