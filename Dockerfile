@@ -9,8 +9,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 RUN apt clean
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN adduser jac
-RUN adduser jac sudo
+RUN useradd --create-home -s /bin/bash jac
+RUN usermod -a -G sudo jac
 RUN echo '%jac ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ENV GOPATH=/go
