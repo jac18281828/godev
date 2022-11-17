@@ -2,6 +2,10 @@
 
 Go Development Container for Docker and VS Code
 
+### Architecture
+* linux/amd64 
+* linux/arm64
+
 Example Dockerfile - for use as builder
 
 ```
