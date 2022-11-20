@@ -1,10 +1,13 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+  push:
+    branches:
+      - "*"
   release:
     types: [created]
 
@@ -48,10 +51,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          platforms: linux/amd64,linux/arm64/v8          
+          platforms: linux/amd64,linux/arm64/v8
           push: ${{ github.event_name == 'release' && github.event.action == 'created' }}
           tags: |
             ${{ env.REPOSITORY_PATH }}:v${{ github.event.release.tag_name }}
             ${{ env.REPOSITORY_PATH }}:${{ env.REPOSITORY_SHA }}
             ${{ env.REPOSITORY_PATH }}:latest
-        if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
