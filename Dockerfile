@@ -1,24 +1,53 @@
-ARG VERSION=stable-slim
-FROM debian:${VERSION} 
+FROM debian:stable-slim as go-builder
+# defined from build kit
+# DOCKER_BUILDKIT=1 docker build . -t ...
+ARG TARGETARCH
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+  apt update && \
+  apt install -y -q --no-install-recommends \
+    git curl gnupg2 build-essential coreutils \
+    openssl libssl-dev pkg-config \
+    ca-certificates apt-transport-https \
+  python3 && \
+  apt clean && \
+  rm -rf /var/lib/apt/lists/*
+
+## Go Lang
+ARG GO_VERSION=1.19.3
+ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
+# RUN cat /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz | sha256sum -c go.${TARGETARCH}.sha256
+RUN tar -C /usr/local -xzf /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
+ENV PATH=$PATH:/usr/local/go/bin
+RUN go version
+
+FROM debian:stable-slim
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
         apt update && \
         apt install -y -q --no-install-recommends \
-        sudo ca-certificates curl git \
-        build-essential ca-certificates golang-go
-RUN apt clean
-RUN rm -rf /var/lib/apt/lists/*
+    sudo ca-certificates curl git \
+    python3 ripgrep \
+    build-essential ca-certificates && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN useradd --create-home -s /bin/bash jac
 RUN usermod -a -G sudo jac
 RUN echo '%jac ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-ENV GOPATH=/go
-ENV GOBIN=/go/bin
+ENV GOBIN=/usr/local/go/bin
 ENV GO111MODULE=on
-RUN go get -v golang.org/x/tools/gopls@v0.7.3
-RUN go get -v github.com/go-delve/delve/cmd/dlv
-RUN go get -v github.com/go-delve/delve/cmd/dlv@v1.7.2
-RUN go get -v github.com/cweill/gotests/gotests
 
-CMD echo "Go Dev"
+# GO LANG
+COPY --from=go-builder /usr/local/go /usr/local/go
+
+LABEL org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.name="godev" \
+    org.label-schema.description="Go Development Container" \
+    org.label-schema.url="https://github.com/jac18281828/godev" \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="git@github.com:jac18281828/godev.git" \
+    org.label-schema.vendor="John Cairns" \
+    org.label-schema.version=$VERSION \
+    org.label-schema.schema-version="1.0"
