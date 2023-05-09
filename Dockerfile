@@ -14,7 +14,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
   rm -rf /var/lib/apt/lists/*
 
 ## Go Lang
-ARG GO_VERSION=1.19.3
+ARG GO_VERSION=1.20.3
 ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
 # RUN cat /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz | sha256sum -c go.${TARGETARCH}.sha256
 RUN tar -C /usr/local -xzf /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
@@ -41,6 +41,12 @@ ENV GO111MODULE=on
 
 # GO LANG
 COPY --from=go-builder /usr/local/go /usr/local/go
+
+ENV PATH=${PATH}:/usr/local/go/bin
+ENV GOPATH=/usr/local/go/bin
+ENV GOROOT=/usr/local/go
+
+RUN go install golang.org/x/tools/gopls@latest
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.name="godev" \
