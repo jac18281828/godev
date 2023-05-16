@@ -4,17 +4,17 @@ FROM debian:stable-slim as go-builder
 ARG TARGETARCH
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
-  apt update && \
-  apt install -y -q --no-install-recommends \
+    apt update && \
+    apt install -y -q --no-install-recommends \
     git curl gnupg2 build-essential coreutils \
     openssl libssl-dev pkg-config \
     ca-certificates apt-transport-https \
-  python3 && \
-  apt clean && \
-  rm -rf /var/lib/apt/lists/*
+    python3 && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ## Go Lang
-ARG GO_VERSION=1.20.3
+ARG GO_VERSION=1.20.4
 ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
 # RUN cat /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz | sha256sum -c go.${TARGETARCH}.sha256
 RUN tar -C /usr/local -xzf /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz

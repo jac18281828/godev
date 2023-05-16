@@ -1,3 +1,7 @@
+# 1.0.8 (2023-05-16)
+
+* go 1.20.4
+
 # 1.0.7 (2023-05-09)
 
 * improvements and fixes for latest vscode environment
