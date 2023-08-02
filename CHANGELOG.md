@@ -1,3 +1,8 @@
+# 1.20.7 (2023-08-02)
+
+* go 1.20.7
+* cleanup permissions for /usr/local/go so it is writable
+
 # 1.20.6 (2023-07-17)
 
 * go 1.20.6
