@@ -36,8 +36,6 @@ RUN useradd --create-home -s /bin/bash jac
 RUN usermod -a -G sudo jac
 RUN echo '%jac ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-
-
 ENV GOROOT=/usr/local/go
 ENV GOBIN=${GOROOT}/bin
 ENV GO111MODULE=on
