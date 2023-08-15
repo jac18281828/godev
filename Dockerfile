@@ -14,10 +14,11 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     rm -rf /var/lib/apt/lists/*
 
 ## Go Lang
-ARG GO_VERSION=1.20.7
-ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go-lang/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
-# RUN cat /go-lang/go${GO_VERSION}.linux-$TARGETARCH.tar.gz | sha256sum -c go.${TARGETARCH}.sha256
-RUN tar -C /usr/local -xzf /go-lang/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
+ARG GO_VERSION=1.21.0
+ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
+# RUN cat /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz | sha256sum -c go.${TARGETARCH}.sha256
+RUN tar -C /usr/local -xzf /go-ethereum/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
+
 ENV PATH=$PATH:/usr/local/go/bin
 RUN go version
 
