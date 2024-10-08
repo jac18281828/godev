@@ -26,7 +26,6 @@ RUN go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 RUN ls -lR /usr/local/go/bin/yamlfmt && strip /usr/local/go/bin/yamlfmt && ls -lR /usr/local/go/bin/yamlfmt
 RUN yamlfmt --version
 
-
 ENV PATH=$PATH:/usr/local/go/bin
 RUN go version
 
@@ -37,7 +36,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
         apt install -y -q --no-install-recommends \
     sudo ca-certificates curl git \
     python3 ripgrep \
-    build-essential ca-certificates && \
+    ca-certificates && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
