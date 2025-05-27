@@ -1,3 +1,15 @@
+# Stage 1: Build yamlfmt
+FROM golang:1 AS yaml-builder
+# defined from build kit
+# DOCKER_BUILDKIT=1 docker build . -t ...
+ARG TARGETARCH
+
+# Install yamlfmt
+WORKDIR /yamlfmt
+RUN go install github.com/google/yamlfmt/cmd/yamlfmt@v0.16.0 && \
+    strip $(which yamlfmt) && \
+    yamlfmt --version
+
 FROM debian:stable-slim AS go-builder
 # defined from build kit
 # DOCKER_BUILDKIT=1 docker build . -t ...
@@ -13,24 +25,18 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
+
+ENV GOROOT=/go
+ENV GOBIN=${GOROOT}/bin
+
 ## Go Lang
-ARG GO_VERSION=1.24.0
-ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
-# RUN cat /go/go${GO_VERSION}.linux-$TARGETARCH.tar.gz | sha256sum -c go.${TARGETARCH}.sha256
-RUN tar -C /usr/local -xzf /go/go${GO_VERSION}.linux-$TARGETARCH.tar.gz
+ARG GO_VERSION=1.24.1
+ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go${GO_VERSION}.linux-$TARGETARCH.tar.gz
+RUN tar -C / -xzf /go${GO_VERSION}.linux-$TARGETARCH.tar.gz
 
-WORKDIR /yamlfmt
-ENV GOBIN=/usr/local/go/bin
-ENV PATH=$PATH:${GOBIN}
-RUN go install github.com/google/yamlfmt/cmd/yamlfmt@latest
-RUN ls -lR /usr/local/go/bin/yamlfmt && strip /usr/local/go/bin/yamlfmt && ls -lR /usr/local/go/bin/yamlfmt
-RUN yamlfmt --version
-
-ENV PATH=$PATH:/usr/local/go/bin
-RUN go version
+RUN ${GOBIN}/go version
 
 FROM debian:stable-slim
-
 RUN export DEBIAN_FRONTEND=noninteractive && \
         apt update && \
         apt install -y -q --no-install-recommends \
@@ -45,15 +51,14 @@ RUN usermod -a -G sudo godev
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ENV USER=godev
-COPY --chown=${USER}:${USER} --from=go-builder /usr/local/go/bin/yamlfmt /usr/local/go/bin/yamlfmt
-ENV PATH=${PATH}:/usr/local/go/bin
-
-ENV GOROOT=/usr/local/go
+ENV GOROOT=/go
 ENV GOBIN=${GOROOT}/bin
 ENV GO111MODULE=on
+ENV PATH=${PATH}:${GOBIN}
 
 # GO LANG
 COPY --from=go-builder ${GOROOT} ${GOROOT}
+COPY --chown=${USER}:${USER} --from=yaml-builder ${GOBIN}/yamlfmt ${GOBIN}/yamlfmt
 
 ENV PATH=${PATH}:${GOBIN}
 ENV GOPATH=${GOBIN}
