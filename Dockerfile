@@ -30,7 +30,7 @@ ENV GOROOT=/go
 ENV GOBIN=${GOROOT}/bin
 
 ## Go Lang
-ARG GO_VERSION=1.24.1
+ARG GO_VERSION=1.26.9
 ADD https://go.dev/dl/go${GO_VERSION}.linux-$TARGETARCH.tar.gz /go${GO_VERSION}.linux-$TARGETARCH.tar.gz
 RUN tar -C / -xzf /go${GO_VERSION}.linux-$TARGETARCH.tar.gz
 
